@@ -1,13 +1,6 @@
 import re
 import pandas as pd
 from nrclex import NRCLex
-import nltk
-import textblob
-
-# Download only once on first run
-nltk.download('punkt')
-nltk.download('stopwords')
-nltk.download('averaged_perceptron_tagger')
 
 
 def preprocess(data):
