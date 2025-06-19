@@ -3,7 +3,7 @@ from wordcloud import WordCloud
 import pandas as pd
 from collections import Counter
 import emoji
-
+import calendar
 extract = URLExtract()
 
 def fetch_stats(selected_user,df):
@@ -38,13 +38,14 @@ def most_busy_users(df):
 def create_wordcloud(selected_user,df):
 
     f = open('stop_hinglish.txt', 'r')
-    stop_words = f.read()
+    stop_words = f.read().splitlines()
 
     if selected_user != 'Overall':
         df = df[df['user'] == selected_user]
-
-    temp = df[df['user'] != 'group_notification']
-    temp = temp[temp['message'] != '<Media omitted>\n']
+    temp = df[
+        (df['user'] != 'group_notification') &
+        (~df['message'].isin(['<Media omitted>\n', 'This message was deleted\n', 'null\n', ''])) 
+    ]
 
     def remove_stop_words(message):
         y = []
@@ -66,8 +67,10 @@ def most_common_words(selected_user,df):
     if selected_user != 'Overall':
         df = df[df['user'] == selected_user]
 
-    temp = df[df['user'] != 'group_notification']
-    temp = temp[temp['message'] != '<Media omitted>\n']
+    temp = df[
+        (df['user'] != 'group_notification') &
+        (~df['message'].isin(['<Media omitted>\n', 'This message was deleted\n', 'null\n', ''])) 
+    ]
 
     words = []
 
@@ -79,17 +82,23 @@ def most_common_words(selected_user,df):
     most_common_df = pd.DataFrame(Counter(words).most_common(20))
     return most_common_df
 
-def emoji_helper(selected_user,df):
+from collections import Counter
+import pandas as pd
+import emoji
+
+def emoji_helper(selected_user, df):
     if selected_user != 'Overall':
         df = df[df['user'] == selected_user]
 
     emojis = []
     for message in df['message']:
-        emojis.extend([c for c in message if c in emoji.UNICODE_EMOJI['en']])
+        emojis.extend([c for c in message if emoji.is_emoji(c)])
 
-    emoji_df = pd.DataFrame(Counter(emojis).most_common(len(Counter(emojis))))
+    emoji_counts = Counter(emojis).most_common()
+    emoji_df = pd.DataFrame(emoji_counts, columns=['emoji', 'count'])
 
     return emoji_df
+
 
 def monthly_timeline(selected_user,df):
 
@@ -120,14 +129,19 @@ def week_activity_map(selected_user,df):
     if selected_user != 'Overall':
         df = df[df['user'] == selected_user]
 
-    return df['day_name'].value_counts()
+    weekdays = list(calendar.day_name)
+    
+    counts = [sum(df['day_name'] == day) for day in weekdays]
+    return weekdays,counts
 
 def month_activity_map(selected_user,df):
 
     if selected_user != 'Overall':
         df = df[df['user'] == selected_user]
 
-    return df['month'].value_counts()
+    months=list(calendar.month_name)
+    counts=[sum(df['month']==month) for month in months]
+    return months,counts
 
 def activity_heatmap(selected_user,df):
 
@@ -137,7 +151,17 @@ def activity_heatmap(selected_user,df):
     user_heatmap = df.pivot_table(index='day_name', columns='period', values='message', aggfunc='count').fillna(0)
 
     return user_heatmap
+def all_emotions(selected_user,df):
+    if selected_user != 'Overall':
+        df = df[df['user'] == selected_user]
+    all_emotions = Counter()
+    for emotions in df['emotion_scores']:
+        all_emotions.update(emotions)
+    emotion_df = pd.DataFrame(all_emotions.items(), columns=["Emotion", "Count"])
+    emotion_df = emotion_df.sort_values(by="Count", ascending=False)
+    return emotion_df
 
+    
 
 
 

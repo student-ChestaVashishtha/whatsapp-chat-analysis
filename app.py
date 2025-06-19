@@ -61,17 +61,17 @@ if uploaded_file is not None:
 
         with col1:
             st.header("Most busy day")
-            busy_day = helper.week_activity_map(selected_user,df)
+            days,counts = helper.week_activity_map(selected_user,df)
             fig,ax = plt.subplots()
-            ax.bar(busy_day.index,busy_day.values,color='purple')
+            ax.bar(days,counts,color='purple')
             plt.xticks(rotation='vertical')
             st.pyplot(fig)
 
         with col2:
             st.header("Most busy month")
-            busy_month = helper.month_activity_map(selected_user, df)
+            month,count = helper.month_activity_map(selected_user, df)
             fig, ax = plt.subplots()
-            ax.bar(busy_month.index, busy_month.values,color='orange')
+            ax.bar(month, count,color='orange')
             plt.xticks(rotation='vertical')
             st.pyplot(fig)
 
@@ -114,7 +114,7 @@ if uploaded_file is not None:
         st.title('Most commmon words')
         st.pyplot(fig)
 
-        # emoji analysis
+    # emoji analysis
         emoji_df = helper.emoji_helper(selected_user,df)
         st.title("Emoji Analysis")
 
@@ -124,8 +124,17 @@ if uploaded_file is not None:
             st.dataframe(emoji_df)
         with col2:
             fig,ax = plt.subplots()
-            ax.pie(emoji_df[1].head(),labels=emoji_df[0].head(),autopct="%0.2f")
+            ax.pie(emoji_df['count'].head(), labels=emoji_df['emoji'].head(), autopct="%0.2f")
             st.pyplot(fig)
+
+        emotion_df = helper.all_emotions(selected_user,df)
+        st.title("Emotion Analysis")
+
+
+        fig,ax = plt.subplots()
+        ax.pie(emotion_df["Count"], labels=emotion_df["Emotion"], autopct="%0.2f")
+        st.pyplot(fig)
+        
 
 
 
