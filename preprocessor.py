@@ -1,6 +1,20 @@
 import re
 import pandas as pd
 from nrclex import NRCLex
+import nltk
+from textblob import TextBlob
+
+# Download necessary corpora for TextBlob if not present
+try:
+    nltk.data.find('tokenizers/punkt')
+except LookupError:
+    nltk.download('punkt')
+
+try:
+    nltk.data.find('taggers/averaged_perceptron_tagger')
+except LookupError:
+    nltk.download('averaged_perceptron_tagger')
+
 def preprocess(data):
     pattern = r'\d{1,2}/\d{1,2}/\d{2,4},\s\d{1,2}:\d{2}\s'
 
