@@ -1,6 +1,14 @@
 import re
 import pandas as pd
 from nrclex import NRCLex
+import nltk
+import textblob
+
+# Download only once on first run
+nltk.download('punkt')
+nltk.download('stopwords')
+textblob.download_corpora()
+
 def preprocess(data):
     pattern = r'\d{1,2}/\d{1,2}/\d{2,4},\s\d{1,2}:\d{2}\s'
 
