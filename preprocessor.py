@@ -2,17 +2,13 @@ import re
 import pandas as pd
 from nrclex import NRCLex
 import nltk
-from textblob import TextBlob
 
-# Download necessary corpora for TextBlob if not present
-try:
-    nltk.data.find('tokenizers/punkt')
-except LookupError:
-    nltk.download('punkt')
+for corpus in ['punkt', 'averaged_perceptron_tagger']:
+    try:
+        nltk.data.find(f'tokenizers/{corpus}' if 'punkt' in corpus else f'taggers/{corpus}')
+    except LookupError:
+        nltk.download(corpus)
 
-try:
-    nltk.data.find('taggers/averaged_perceptron_tagger')
-except LookupError:
     nltk.download('averaged_perceptron_tagger')
 
 def preprocess(data):
