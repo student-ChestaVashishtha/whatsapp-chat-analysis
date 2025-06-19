@@ -1,3 +1,13 @@
+# app.py
+
+import nltk
+from textblob import TextBlob
+
+# ✅ Ensure required corpora are downloaded before using TextBlob/NRCLex
+try:
+    _ = TextBlob("test").tags
+except LookupError:
+    nltk.download('punkt')
 import streamlit as st
 import preprocessor,helper
 import matplotlib.pyplot as plt
