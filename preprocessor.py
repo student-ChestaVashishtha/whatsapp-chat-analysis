@@ -1,16 +1,6 @@
 import re
 import pandas as pd
 from nrclex import NRCLex
-import nltk
-
-for corpus in ['punkt', 'averaged_perceptron_tagger']:
-    try:
-        nltk.data.find(f'tokenizers/{corpus}' if 'punkt' in corpus else f'taggers/{corpus}')
-    except LookupError:
-        nltk.download(corpus)
-
-    nltk.download('averaged_perceptron_tagger')
-
 def preprocess(data):
     pattern = r'\d{1,2}/\d{1,2}/\d{2,4},\s\d{1,2}:\d{2}\s'
 

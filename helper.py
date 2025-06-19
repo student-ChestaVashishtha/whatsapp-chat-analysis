@@ -30,10 +30,21 @@ def fetch_stats(selected_user,df):
     return num_messages,len(words),num_media_messages,len(links)
 
 def most_busy_users(df):
-    x = df['user'].value_counts().head()
-    df = round((df['user'].value_counts() / df.shape[0]) * 100, 2).reset_index().rename(
-        columns={'index': 'name', 'user': 'percent'})
-    return x,df
+    # Count number of messages per user
+    user_counts = df['user'].value_counts()
+
+    # Remove 'group_notification' if it exists
+    if 'group_notification' in user_counts:
+        user_counts = user_counts.drop('group_notification')
+
+    # Top 5 users
+    top_users = user_counts.head()
+
+    # Calculate percent contribution of each user
+    percent_df = (user_counts / user_counts.sum() * 100).round(2).reset_index()
+    percent_df.columns = ['name', 'percent']
+
+    return top_users, percent_df
 
 def create_wordcloud(selected_user,df):
 
