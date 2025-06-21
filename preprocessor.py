@@ -1,9 +1,9 @@
 import os
 import nltk
 
-# Manually set the NLTK data path to where Render stores them
-nltk.data.path.append("/opt/render/nltk_data")
 os.environ["NLTK_DATA"] = "/opt/render/nltk_data"
+nltk.data.path.append("/opt/render/nltk_data")
+
 
 import re
 import pandas as pd

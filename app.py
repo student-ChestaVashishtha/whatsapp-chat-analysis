@@ -1,3 +1,9 @@
+import os
+import nltk
+
+os.environ["NLTK_DATA"] = "/opt/render/nltk_data"
+nltk.data.path.append("/opt/render/nltk_data")
+
 import streamlit as st
 import preprocessor,helper
 import matplotlib.pyplot as plt
