@@ -1,5 +1,6 @@
 #!/bin/bash
-echo "Downloading NLTK and TextBlob corpora..."
-python -m nltk.downloader punkt stopwords averaged_perceptron_tagger
+
+pip install -r requirements.txt
 python -m textblob.download_corpora
+
 
